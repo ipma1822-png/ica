@@ -2,7 +2,21 @@ const db=window.supabase.createClient(ICA_CONFIG.supabaseUrl,ICA_CONFIG.supabase
 const $=id=>document.getElementById(id); let issuers=[],types=[],details=[],credentials=[];
 const val=id=>$(id).value.trim(); const show=(id,on)=>$(id).classList.toggle('hidden',!on);
 
-async function init(){const {data:{session}}=await db.auth.getSession(); if(session) await enter(session); else show('loginView',true);}
+async function consumeGmsHandoff(){
+  const raw=location.hash||'';
+  const m=raw.match(/^#gms_sso=([A-Za-z0-9_-]+)$/);
+  if(!m)return false;
+  history.replaceState({},document.title,location.pathname+location.search);
+  $('loginMsg').textContent='GMS 관리자 인증을 확인하는 중…';
+  const {data,error}=await db.auth.verifyOtp({token_hash:m[1],type:'magiclink'});
+  if(error||!data?.session){$('loginMsg').textContent='GMS 인증 연결이 만료되었거나 유효하지 않습니다.';return false}
+  await enter(data.session);return true;
+}
+async function init(){
+  if(await consumeGmsHandoff())return;
+  const {data:{session}}=await db.auth.getSession();
+  if(session) await enter(session); else show('loginView',true);
+}
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginMsg').textContent='확인 중…';const {data,error}=await db.auth.signInWithPassword({email:val('email'),password:val('password')});if(error){$('loginMsg').textContent='로그인 실패: '+error.message;return}await enter(data.session)});
 $('logoutBtn').onclick=async()=>{await db.auth.signOut();location.reload()};
 async function enter(session){const {data:admin}=await db.from('gms_admin_accounts').select('email,role').eq('auth_user_id',session.user.id).eq('is_active',true).maybeSingle();if(!admin){await db.auth.signOut();$('loginMsg').textContent='ICA 관리자 권한이 없습니다.';show('loginView',true);return}$('adminEmail').textContent=admin.email+' · '+admin.role;show('logoutBtn',true);show('loginView',false);show('appView',true);await loadMasters();await loadRegistry();$('issuedOn').value=new Date().toISOString().slice(0,10)}
