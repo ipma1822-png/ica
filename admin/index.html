@@ -1,0 +1,28 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ICA ADMIN · GLOBAL CREDENTIAL OFFICE</title><link rel="stylesheet" href="admin.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js"></script>
+<script src="../assets/js/ica-config.js"></script></head><body>
+<header><a href="../" class="brand"><b>ICA</b><span>INTERNATIONAL CREDENTIAL ALLIANCE</span></a><div><span id="adminEmail"></span><button id="logoutBtn" class="ghost hidden">로그아웃</button></div></header>
+<main>
+ <section id="loginView" class="panel login"><p class="eyebrow">AUTHORIZED ADMIN ONLY</p><h1>ICA 관리자 로그인</h1><p>등록된 통합관리자 계정으로 로그인하세요.</p><form id="loginForm"><label>이메일<input id="email" type="email" required autocomplete="username"></label><label>비밀번호<input id="password" type="password" required autocomplete="current-password"></label><button>로그인</button></form><p id="loginMsg" class="msg"></p></section>
+ <section id="appView" class="hidden">
+  <div class="hero"><div><p class="eyebrow">GLOBAL CREDENTIAL OFFICE</p><h1>통합 발급·조회·출력·발송</h1></div><div class="stats"><b id="credentialCount">0</b><span>신규 ICA 발급</span></div></div>
+  <nav class="tabs"><button data-tab="issue" class="active">신규 발급</button><button data-tab="registry">발급대장</button><button data-tab="shipping">발송관리</button><a href="../verification/" target="_blank">공개조회 ↗</a></nav>
+  <section id="tab-issue" class="tab panel">
+   <h2>신규 Credential 발급</h2><div class="steps"><span>1 발급기관</span><span>2 종류</span><span>3 세부종류</span><span>4 발급정보</span></div>
+   <form id="issueForm" class="grid">
+    <label>발급기관<select id="issuer" required></select></label><label>Credential 종류<select id="type" required></select></label>
+    <label>세부종류<select id="detail"><option value="">직접입력 / 선택 없음</option></select></label><label>세부종류 직접입력<input id="detailLabel"></label>
+    <div class="next-no"><small>예상 다음 발급번호</small><strong id="nextNo">—</strong><em>발급 확정 전에는 번호가 소비되지 않습니다.</em></div>
+    <label>성명<input id="personName" required></label><label>영문명<input id="personNameEn"></label><label>사진 URL<input id="photoUrl" type="url"></label>
+    <label>자격명<input id="qualificationName"></label><label>종목<input id="discipline"></label><label>단·등급<input id="rankGrade"></label><label>직책<input id="positionTitle"></label>
+    <label>발급일<input id="issuedOn" type="date" required></label><label>유효기간<input id="validUntil" type="date"></label><label>연락처<input id="phone"></label><label>이메일<input id="personEmail" type="email"></label>
+    <label>우편번호<input id="postalCode"></label><label class="wide">주소<input id="address"></label><label>상세주소<input id="addressDetail"></label><label class="wide">관리자 비고<textarea id="adminNote"></textarea></label>
+    <div class="checks wide"><label><input id="cardRequested" type="checkbox"> CARD 발급</label><label><input id="documentRequested" type="checkbox"> DOCUMENT 발급</label></div>
+    <div class="actions wide"><button type="submit" class="primary">발급 확정</button><span id="issueMsg" class="msg"></span></div>
+   </form>
+  </section>
+  <section id="tab-registry" class="tab panel hidden"><div class="section-head"><h2>발급대장</h2><input id="registrySearch" placeholder="번호 또는 성명 검색"></div><div id="registryList" class="list"></div></section>
+  <section id="tab-shipping" class="tab panel hidden"><h2>Shipping Center</h2><p>발급대장에서 Credential을 선택하여 발송정보를 등록합니다.</p><form id="shippingForm" class="grid hidden"><input id="shippingCredentialId" type="hidden"><label>Credential No.<input id="shippingNo" readonly></label><label>상태<select id="shippingStatus"><option>REGISTERED</option><option>CARD_PRINTED</option><option>DOCUMENT_PRINTED</option><option>PACKED</option><option>SHIPPED</option></select></label><label>수령인<input id="recipientName" required></label><label>연락처<input id="recipientPhone"></label><label>우편번호<input id="shippingPostalCode"></label><label class="wide">주소<input id="shippingAddress"></label><label>상세주소<input id="shippingAddressDetail"></label><label>발송방법<input id="shippingMethod"></label><label>등기/운송장번호<input id="trackingNumber"></label><label>발송일<input id="shippedOn" type="date"></label><label>발송비<input id="shippingCost" type="number" min="0"></label><label class="wide">비고<textarea id="shippingNote"></textarea></label><div class="actions wide"><button class="primary">발송정보 저장</button><span id="shippingMsg" class="msg"></span></div></form></section>
+ </section>
+</main><script src="admin.js"></script></body></html>
