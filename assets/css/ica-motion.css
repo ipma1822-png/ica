@@ -1,0 +1,40 @@
+/* ICA LIVING GLOBAL NETWORK v1.0 — additive motion only */
+.global-hero{isolation:isolate}
+.global-hero::before,.global-hero::after{content:"";position:absolute;pointer-events:none;z-index:0;border-radius:50%}
+.global-hero::before{width:680px;height:680px;right:-180px;top:-230px;border:1px solid rgba(228,184,79,.16);box-shadow:0 0 90px rgba(36,92,168,.13),inset 0 0 80px rgba(228,184,79,.04);animation:icaHaloDrift 18s ease-in-out infinite alternate}
+.global-hero::after{width:430px;height:430px;left:-230px;bottom:-210px;border:1px dashed rgba(86,151,232,.15);animation:icaSpin 42s linear infinite}
+.world-grid{z-index:0;background-image:linear-gradient(rgba(91,145,214,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(91,145,214,.045) 1px,transparent 1px);background-size:48px 48px;animation:icaGridMove 24s linear infinite}
+.ica-stars{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.ica-star{position:absolute;width:3px;height:3px;border-radius:50%;background:#e9bd58;box-shadow:0 0 9px #e9bd58;opacity:.2;animation:icaTwinkle var(--dur,4s) ease-in-out infinite var(--delay,0s)}
+.ica-constellation{position:absolute;height:1px;transform-origin:left center;background:linear-gradient(90deg,rgba(228,184,79,.03),rgba(76,139,220,.18),rgba(228,184,79,.04));opacity:.45;animation:icaLinePulse var(--dur,8s) ease-in-out infinite}
+.hero__copy{position:relative;z-index:3;animation:icaReveal .9s ease-out both}
+.emblem-stage{z-index:3;animation:icaStageFloat 7s ease-in-out infinite}
+.emblem-stage img{animation:icaEmblemBreath 5.5s ease-in-out infinite;will-change:transform,filter}
+.orbit1{animation:icaSpin 25s linear infinite!important}
+.orbit2{animation:icaSpinReverse 34s linear infinite!important}
+.emblem-stage::before,.emblem-stage::after{content:"";position:absolute;left:50%;top:50%;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);border:1px solid rgba(228,184,79,.13)}
+.emblem-stage::before{width:82%;height:82%;animation:icaRadar 4.8s ease-out infinite}
+.emblem-stage::after{width:96%;height:96%;border-color:rgba(74,138,220,.10);animation:icaRadar 4.8s ease-out 2.4s infinite}
+.pulse{animation:icaNodePulse 2.6s ease-in-out infinite!important}.p2{animation-delay:.8s!important}.p3{animation-delay:1.6s!important}
+.badge{animation:icaGoldGlow 4s ease-in-out infinite}
+.hero__title .gold{background:linear-gradient(100deg,#d7a940,#fff0ad,#d7a940);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:icaGoldSweep 6s linear infinite}
+.quick-verify{position:relative}.quick-verify::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,#e4b84f,transparent);transform:scaleX(.1);opacity:0;transition:.35s}.quick-verify:focus-within::after{transform:scaleX(1);opacity:1}
+.service-card{transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease}.service-card:hover{transform:translateY(-7px);border-color:rgba(228,184,79,.5);box-shadow:0 20px 50px rgba(0,0,0,.28),0 0 28px rgba(228,184,79,.06)}
+.network-card{overflow:hidden}.network-card::after{content:"";position:absolute;width:140%;height:1px;left:-20%;top:50%;background:linear-gradient(90deg,transparent,rgba(228,184,79,.5),transparent);animation:icaScan 5s ease-in-out infinite}.network-card .globe{animation:icaGlobe 9s ease-in-out infinite}
+.ica-reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.75,.25,1)}.ica-reveal.is-visible{opacity:1;transform:none}
+@keyframes icaGridMove{to{background-position:48px 48px}}
+@keyframes icaTwinkle{0%,100%{opacity:.15;transform:scale(.7)}50%{opacity:.9;transform:scale(1.7)}}
+@keyframes icaLinePulse{0%,100%{opacity:.12}50%{opacity:.52}}
+@keyframes icaStageFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes icaEmblemBreath{0%,100%{transform:scale(1);filter:drop-shadow(0 22px 35px rgba(0,0,0,.45))}50%{transform:scale(1.018);filter:drop-shadow(0 26px 42px rgba(228,184,79,.18))}}
+@keyframes icaRadar{0%{transform:translate(-50%,-50%) scale(.72);opacity:.5}100%{transform:translate(-50%,-50%) scale(1.18);opacity:0}}
+@keyframes icaSpin{to{transform:rotate(360deg)}}@keyframes icaSpinReverse{to{transform:rotate(-360deg)}}
+@keyframes icaNodePulse{0%,100%{opacity:.35;box-shadow:0 0 0 0 rgba(228,184,79,.3)}50%{opacity:1;box-shadow:0 0 0 9px rgba(228,184,79,0)}}
+@keyframes icaGoldSweep{to{background-position:220% center}}
+@keyframes icaGoldGlow{0%,100%{box-shadow:0 0 0 rgba(228,184,79,0)}50%{box-shadow:0 0 24px rgba(228,184,79,.09)}}
+@keyframes icaScan{0%,100%{transform:translateY(-90px);opacity:0}35%,65%{opacity:.6}50%{transform:translateY(90px)}}
+@keyframes icaGlobe{0%,100%{transform:rotate(0deg) scale(1)}50%{transform:rotate(12deg) scale(1.05)}}
+@keyframes icaReveal{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes icaHaloDrift{to{transform:translate(-25px,35px) scale(1.06)}}
+@media(max-width:720px){.global-hero::before{width:420px;height:420px;right:-240px}.emblem-stage{animation-duration:8s}.ica-constellation:nth-child(n+7){display:none}}
+@media(prefers-reduced-motion:reduce){.world-grid,.ica-star,.ica-constellation,.emblem-stage,.emblem-stage img,.orbit,.pulse,.badge,.hero__title .gold,.network-card::after,.network-card .globe,.global-hero::before,.global-hero::after{animation:none!important}.ica-reveal{opacity:1;transform:none;transition:none}}
