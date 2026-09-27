@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ICA MOROCCO | President Resource Center</title>
+<link rel="stylesheet" href="../../assets/css/style.css">
+<style>
+main{max-width:920px;margin:auto;padding:34px 20px}.card{background:#0d1421;border:1px solid #3d3420;border-radius:20px;padding:24px;margin:18px 0}.hero{text-align:center}.hero img{width:100px}.hero h1{margin:15px 0 5px}.en{direction:ltr}.muted{color:#98a4b7;line-height:1.8}.row{display:flex;gap:10px;align-items:end}.row>div{flex:1}label{display:block;margin-bottom:7px}input{width:100%;box-sizing:border-box;padding:13px;border-radius:10px;border:1px solid #34415a;background:#080d16;color:white}.btn{border:0;border-radius:10px;padding:13px 18px;background:#d9b65d;color:#090d14;font-weight:800;cursor:pointer}.hidden{display:none}.resource{padding:16px;border:1px solid #29354b;border-radius:14px;margin:12px 0}.resource b{display:block;margin-bottom:6px}.lock{color:#e9c86f}@media(max-width:650px){.row{display:block}.row .btn{width:100%;margin-top:10px}}
+</style></head><body>
+<main><section class="card hero"><img src="../../assets/%20images/ica-official-emblem..png" alt="ICA"><p class="lock">🔒 MOROCCO PRESIDENT · PRIVATE RESOURCE CENTER</p><h1>مركز الموارد الرسمي لرئيس المغرب</h1><p class="en">Official resources for the headquarters-appointed Morocco representative.</p></section>
+<section class="card" id="login"><h2>دخول الممثل المعتمد</h2><p class="muted">هذا القسم ليس عاماً. أرسل رابط تسجيل الدخول إلى البريد الإلكتروني المعتمد لدى المقر.</p><div class="row"><div><label>E-mail</label><input id="email" type="email" dir="ltr" autocomplete="email"></div><button id="send" class="btn">إرسال رابط الدخول</button></div><p id="state" class="muted"></p></section>
+<section class="card hidden" id="denied"><h2>غير مصرح</h2><p class="muted">تم تسجيل الدخول، لكن هذا الحساب غير مسجل حالياً كممثل معتمد للمغرب. يرجى التواصل مع المقر في كوريا.</p></section>
+<section class="card hidden" id="center"><p class="lock">AUTHORIZED REPRESENTATIVE</p><h2 class="en">NAJIM BOUARRAKIA</h2><p>الممثل الرسمي للمغرب · معين من المقر الدولي في جمهورية كوريا</p>
+<div class="resource"><b>IPMA · Official Logo / Emblem</b><span class="muted">سيتم توفير ملف الشعار الأصلي المعتمد من المقر هنا بعد اعتماده كـ MASTER ASSET.</span></div>
+<div class="resource"><b>WTKF · Official Logo / Emblem</b><span class="muted">سيتم توفير ملف الشعار الأصلي المعتمد من المقر هنا بعد اعتماده كـ MASTER ASSET.</span></div>
+<div class="resource"><b>Official Uniform / Belt / Shirt Guide</b><span class="muted">قيد الإعداد · Headquarters approved resources only.</span></div>
+<p class="muted">لن نوفر ملفات غير مؤكدة أو شعارات معاد رسمها. سيتم نشر الملفات الأصلية المعتمدة فقط.</p>
+<button id="logout" class="btn">تسجيل الخروج</button></section></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../../assets/js/ica-config.js"></script>
+<script>
+const sb=supabase.createClient(window.ICA_CONFIG.supabaseUrl,window.ICA_CONFIG.supabaseKey),$=s=>document.querySelector(s);
+async function sync(){const {data}=await sb.auth.getSession(),u=data.session?.user;if(!u)return;$("#login").classList.add("hidden");const ok=String(u.user_metadata?.ica_country||"").toUpperCase()==="MA"&&String(u.user_metadata?.ica_role||"").toUpperCase()==="PRESIDENT";(ok?$("#center"):$("#denied")).classList.remove("hidden")}
+$("#send").onclick=async()=>{const email=$("#email").value.trim();if(!email)return;$("#state").textContent="Sending…";const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.href.split("#")[0]}});$("#state").textContent=error?error.message:"تم إرسال رابط الدخول إلى البريد الإلكتروني."};
+$("#logout").onclick=async()=>{await sb.auth.signOut();location.reload()};sync();
+</script></body></html>
