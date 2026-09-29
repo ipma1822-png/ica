@@ -30,14 +30,14 @@ Deno.serve(async (req) => {
   }
 
   const url = Deno.env.get("SUPABASE_URL");
-  const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const key = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") || "{}").default || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (!url || !key) return json({error:"Unavailable"},503,origin);
   const query = new URL(url + "/rest/v1/gn24_reporters");
   query.searchParams.set("select","id,name,reporter_number,role,affiliation,region,official_appointed_at,appointed_at,status,photo_url");
   query.searchParams.set("reporter_number","eq."+number);
   query.searchParams.set("status","eq.active");
   query.searchParams.set("limit","1");
-  const response = await fetch(query, {headers:{"apikey":key,"Authorization":"Bearer "+key}});
+  const response = await fetch(query, {headers:{"apikey":key}});
   if (!response.ok) return json({error:"Unavailable"},503,origin);
   const rows = await response.json();
   const r = rows[0];
