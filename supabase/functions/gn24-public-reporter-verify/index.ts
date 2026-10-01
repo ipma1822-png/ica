@@ -22,10 +22,11 @@ Deno.serve(async (req) => {
   });
   if (req.method !== "POST" || !origins.has(origin)) return json({error:"Not allowed"},403,origin);
 
-  let number: unknown;
-  try { ({reporter_number:number} = await req.json()); }
+  let number: unknown, name: unknown, birth_date: unknown;
+  try { ({reporter_number:number, name, birth_date} = await req.json()); }
   catch { return json({error:"Invalid request"},400,origin); }
-  if (typeof number !== "string" || !/^GN24-[0-9]{4}-[0-9]{4,}$/.test(number)) {
+  const identity = typeof name === "string" && name === name.trim() && name.length > 0 && name.length <= 100 && typeof birth_date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(birth_date) && !Number.isNaN(Date.parse(birth_date));
+  if (!identity && (name !== undefined || birth_date !== undefined || typeof number !== "string" || !/^GN24-[0-9]{4}-[0-9]{4,}$/.test(number))) {
     return json({error:"Invalid reporter number"},400,origin);
   }
 
@@ -34,13 +35,16 @@ Deno.serve(async (req) => {
   if (!url || !key) return json({error:"Unavailable"},503,origin);
   const query = new URL(url + "/rest/v1/gn24_reporters");
   query.searchParams.set("select","id,name,reporter_number,role,affiliation,region,official_appointed_at,appointed_at,status,photo_url");
-  query.searchParams.set("reporter_number","eq."+number);
+  if (identity) {
+    query.searchParams.set("name","eq."+name);
+    query.searchParams.set("birth_date","eq."+birth_date);
+  } else query.searchParams.set("reporter_number","eq."+number);
   query.searchParams.set("status","eq.active");
-  query.searchParams.set("limit","1");
+  query.searchParams.set("limit","2");
   const response = await fetch(query, {headers:{"apikey":key}});
   if (!response.ok) return json({error:"Unavailable"},503,origin);
   const rows = await response.json();
-  const r = rows[0];
+  const r = rows.length === 1 ? rows[0] : null;
   if (!r || !r.name || /편집부|시스템|운영팀/.test(r.name) || r.id === "gn24-editorial") {
     return json({reporter:null},200,origin);
   }
