@@ -84,4 +84,46 @@ $("champAdminForm").addEventListener("submit",async e=>{
  }catch(err){$("champAdminMsg").textContent=err.code==="23505"?"이미 등록된 공식 기록번호입니다.":"저장 실패: "+err.message+" (권한 또는 다른 관리자의 변경 여부를 확인해 주세요.)"}
  finally{champBusy=false;$("saveChampBtn").disabled=false;$("cancelChampBtn").disabled=false}
 });
+
+let overseasRows=[],overseasColumns=[],overseasSelected=null,overseasLoading=false;
+const overseasLocked=key=>/^(id|uuid|.*_id|.*_uuid|.*_code|.*_no|.*_number|code|number|created_at|updated_at|created_by|updated_by)$/.test(key);
+const overseasLabels={branch_name:"지부명",branch_name_en:"영문 지부명",branch_code:"지부코드",branch_no:"지부번호",branch_number:"지부번호",country_name:"국가명",country_code:"국가코드",representative_name:"대표자명",person_name:"성명",name:"성명",position_title:"직책",photo_url:"사진 URL",appointed_on:"임명일",valid_until:"유효기간",status:"상태",admin_note:"관리자 비고"};
+async function loadOverseasBranches(){
+ if(overseasLoading)return;overseasLoading=true;$("refreshOverseasBtn").disabled=true;$("overseasMsg").textContent="해외지부 자료를 불러오는 중…";
+ try{
+ const {data:{session},error:sessionError}=await db.auth.getSession();if(sessionError||!session)throw new Error("관리자 로그인이 필요합니다.");
+ const {data:admin,error:adminError}=await db.from("gms_admin_accounts").select("email,role").eq("auth_user_id",session.user.id).eq("is_active",true).maybeSingle();if(adminError||!admin)throw new Error("GMS 관리자 권한을 확인할 수 없습니다.");
+ const {data,error}=await db.from("gms_overseas_branches").select("*");if(error)throw error;
+ overseasRows=data||[];overseasColumns=[...new Set(overseasRows.flatMap(r=>Object.keys(r)))];renderOverseasBranches();
+ $("overseasMsg").textContent="목록을 불러왔습니다. 저장 API 미연결로 DB 저장은 지원하지 않습니다.";
+ }catch(error){$("overseasMsg").textContent="불러오기 실패: "+error.message;}
+ finally{overseasLoading=false;$("refreshOverseasBtn").disabled=false;}
+}
+function renderOverseasBranches(){
+ const q=val("overseasSearch").toLowerCase(),rows=overseasRows.map((r,index)=>({r,index})).filter(({r})=>!q||Object.values(r).some(v=>typeof v!=="object"&&String(v??"").toLowerCase().includes(q)));
+ $("overseasList").innerHTML=rows.length?rows.map(({r,index})=>`<article class="item"><div>${Object.entries(r).filter(([k,v])=>v!==null&&typeof v!=="object"&&!/created|updated/.test(k)).map(([k,v])=>`<small>${esc(overseasLabels[k]||k)}: ${esc(v)}</small>`).join("")}</div><div class="item-actions"><button data-overseas-index="${index}" type="button">등록정보 수정</button></div></article>`).join(""):"<p>일치하는 해외지부 자료가 없습니다.</p>";
+}
+function openOverseasForm(index=null){
+ const row=index===null?null:overseasRows[index];if(index!==null&&!row)return;
+ overseasSelected=row;$("overseasFormTitle").textContent=row?"해외지부 등록정보 수정 · 저장 미연결":"해외지부 직접 등록 · 저장 미연결";
+ const keys=overseasColumns.filter(k=>!overseasRows.some(r=>r[k]!==null&&typeof r[k]==="object"));
+ $("overseasFields").innerHTML=keys.length?keys.map((key,i)=>{const sample=overseasRows.find(r=>r[key]!==null)?.[key],value=row?.[key]??"",locked=overseasLocked(key)||typeof sample==="boolean",type=typeof sample==="number"?"number":/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(String(sample))?"date":/photo_url|certificate_url/.test(key)?"url":"text";return `<label>${esc(overseasLabels[key]||key)}<input id="overseasField${i}" data-overseas-key="${esc(key)}" type="${type}" value="${esc(value)}" ${locked?'readonly aria-readonly="true"':''} ${!row&&locked?'placeholder="기존 발급 규칙 연결 필요"':''}></label>`}).join(""):"<p>컬럼을 확인할 기존 자료가 없습니다. 확정된 컬럼·저장 API 연결이 필요합니다.</p>";
+ $("reviewOverseasBtn").disabled=!keys.length;show("overseasForm",true);$("overseasForm").scrollIntoView({behavior:"smooth"});
+}
+function reviewOverseasInput(){
+ const inputs=[...$("overseasFields").querySelectorAll("[data-overseas-key]")],changes=[];
+ for(const input of inputs){const key=input.dataset.overseasKey,value=input.value.trim();if(overseasLocked(key)){if(!overseasSelected&&value){if(overseasRows.some(r=>String(r[key]??"")===value))throw new Error("이미 등록된 지부번호·코드입니다.");throw new Error("지부번호·코드는 기존 발급 규칙 연결 후 처리해야 합니다.");}if(overseasSelected&&String(overseasSelected[key]??"")!==value)throw new Error("기존 지부번호·코드·시스템 값은 변경할 수 없습니다.");continue}
+ if(value&&/photo_url|certificate_url/.test(key)&&!/^https?:\/\//.test(value))throw new Error("사진·증서 URL은 HTTP·HTTPS 주소로 입력하세요.");
+ if(value&&input.type==="number"&&!Number.isFinite(Number(value)))throw new Error("숫자 입력을 확인하세요.");
+ if(!overseasSelected||String(overseasSelected[key]??"")!==value)changes.push(`${overseasLabels[key]||key}: ${overseasSelected?String(overseasSelected[key]??"(없음)")+" → ":""}${value||"(없음)"}`);
+ }
+ if(!changes.length)throw new Error("변경되거나 입력된 정보가 없습니다.");
+ if(!overseasSelected&&!inputs.some(input=>!input.readOnly&&input.value.trim()))throw new Error("등록정보를 입력하세요.");
+ return changes;
+}
+$("overseasForm").addEventListener("submit",event=>{event.preventDefault();try{const changes=reviewOverseasInput();if(confirm(`입력 내용을 확인할까요?\n\n${changes.join("\n")}\n\n저장 API 미연결로 DB에는 저장되지 않습니다.`))$("overseasMsg").textContent="입력 내용 확인 완료. DB 저장은 수행되지 않았습니다. 기존 저장 API·번호 발급 규칙 연결이 필요합니다.";}catch(error){$("overseasMsg").textContent=error.message;}});
+$("overseasList").addEventListener("click",event=>{const button=event.target.closest("[data-overseas-index]");if(button)openOverseasForm(Number(button.dataset.overseasIndex));});
+$("newOverseasBtn").onclick=()=>openOverseasForm();$("refreshOverseasBtn").onclick=loadOverseasBranches;$("overseasSearch").oninput=renderOverseasBranches;
+$("cancelOverseasBtn").onclick=()=>{overseasSelected=null;show("overseasForm",false);$("overseasMsg").textContent="";};
+document.querySelector('[data-tab="overseas"]').addEventListener("click",loadOverseasBranches);
 init().catch(e=>{$("loginMsg").textContent=e.message});
