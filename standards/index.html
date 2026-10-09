@@ -39,8 +39,7 @@
       <section class="card">
         <h2>기준 운영 선언</h2>
         <p class="muted" style="line-height:1.7; margin-top:10px">
-          ICA · International Credential Alliance은 공익 목적의 자격·인증이 사회에서 신뢰를 얻도록,
-          평가 요건과 판정 기준을 문서화하고, 절차에 따라 심사하며, 조회(검증) 서비스로 결과를 확인할 수 있도록 운영합니다.
+          <span data-ica-policy-statement>국제공익자격인증재단은 공익 목적의 자격·인증이 사회에서 신뢰를 얻도록, 평가 요건과 판정 기준을 문서화하고, 절차에 따라 심사하며, 조회(검증) 서비스로 결과를 확인할 수 있도록 운영합니다.</span>
         </p>
 
         <div style="display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px; margin-top:12px">
@@ -64,7 +63,7 @@
           </div>
         </div>
 
-        <div class="hero__cta" style="margin-top:14px">
+        <div class="hero__cta" style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
           <a class="btn" href="../certification/">자격·인증</a>
           <a class="btn btn--primary" href="../verification/">조회 서비스</a>
           <a class="btn btn--ghost" href="../resources/">서식/규정 다운로드</a>
@@ -215,6 +214,7 @@
 
   <script src="../assets/js/app.js"></script>
   <script src="../assets/js/ica-20lang.js"></script>
-  <script src="../assets/js/ica-public-pages-i18n.js"></script>
+  <script src="../assets/js/ica-public-pages-i18n.js?v=15ba0a5c"></script>
+  <script>if(new URLSearchParams(location.search).get("lang")==="en"){const el=document.querySelector("[data-ica-policy-statement]");if(el)el.textContent="ICA documents evaluation requirements and decision criteria, conducts reviews according to established procedures, and provides verification services for public-interest credentials."}</script>
 </body>
 </html>
