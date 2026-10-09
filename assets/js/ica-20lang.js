@@ -27,7 +27,27 @@ const root=document.createElement('div');root.className='ica20-root';root.innerH
 const panel=root.querySelector('.ica20-panel'),grid=root.querySelector('.ica20-grid');
 function setText(sel,text){const el=document.querySelector(sel);if(el&&text!=null)el.textContent=text}
 function apply(code){const d=T[code]||T.en;document.documentElement.lang=code==='zh-CN'?'zh-CN':code;document.documentElement.dir=(code==='ar'||code==='fa')?'rtl':'ltr';const nav=document.querySelectorAll('.nav__item');if(nav.length>=6){nav[0].textContent=d.verify;nav[1].textContent=d.cert;nav[2].textContent=d.partners;nav[3].textContent=d.standards;nav[4].textContent=d.about;nav[5].textContent=d.contact}setText('.badge',d.registry);setText('.hero__lead',d.lead);setText('.quick-verify label',d.number);const input=document.querySelector('#quickCode');if(input)input.placeholder=d.placeholder;setText('.quick-verify button',d.button);setText('.language-link',d.available);setText('.service-section .section-kicker',d.services);setText('.service-section h2',d.servicesTitle);const cards=document.querySelectorAll('.service-card small');[d.s1,d.s2,d.s3,d.s4].forEach((x,i)=>{if(cards[i])cards[i].textContent=x});localStorage.setItem('ica_language',code);const u=new URL(location.href);if(code==='ko')u.searchParams.delete('lang');else u.searchParams.set('lang',code);history.replaceState(null,'',u.pathname+u.search+u.hash);panel.hidden=true;document.body.classList.remove('ica20-lock')}
-LANGS.forEach(([code,flag,name])=>{const b=document.createElement('button');b.type='button';b.className='ica20-lang';b.innerHTML=`<span class="ica20-flag">${flag}</span><span><b>${name}</b><small>${code}</small></span>`;b.onclick=()=>apply(code);grid.appendChild(b)});
+// Color flag glyphs are not available on every platform (notably Windows).
+// Keep the original country code when the emoji renders as letters or boxes.
+function flagEmoji(country){return String.fromCodePoint(...Array.from(country,c=>0x1f1e6+c.charCodeAt(0)-65))}
+function supportsFlag(emoji){
+  try{
+    const canvas=document.createElement('canvas');canvas.width=48;canvas.height=40;
+    const ctx=canvas.getContext('2d');if(!ctx)return false;
+    ctx.font='28px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+    ctx.fillStyle='#000';ctx.fillText(emoji,0,30);
+    const pixels=ctx.getImageData(0,0,48,40).data;
+    for(let i=0;i<pixels.length;i+=4){
+      if(pixels[i+3]>0&&Math.max(pixels[i],pixels[i+1],pixels[i+2])-Math.min(pixels[i],pixels[i+1],pixels[i+2])>20)return true;
+    }
+  }catch(_){/* Canvas unavailable: preserve the country-code fallback. */}
+  return false;
+}
+LANGS.forEach(([code,flag,name])=>{const b=document.createElement('button');b.type='button';b.className='ica20-lang';b.innerHTML=`<span class="ica20-flag">${flag}</span><span><b>${name}</b><small>${code}</small></span>`;
+  const emoji=flagEmoji(flag),icon=b.querySelector('.ica20-flag');
+  if(supportsFlag(emoji)){icon.textContent=emoji;icon.style.fontSize='24px';icon.style.lineHeight='1'}
+  icon.title=flag;
+  b.onclick=()=>apply(code);grid.appendChild(b)});
 const open=()=>{panel.hidden=false;document.body.classList.add('ica20-lock')},close=()=>{panel.hidden=true;document.body.classList.remove('ica20-lock')};document.querySelectorAll('.ica20-open').forEach(b=>b.addEventListener('click',open));root.querySelector('.ica20-close').onclick=close;panel.addEventListener('click',e=>{if(e.target===panel)close()});
 const requested=new URL(location.href).searchParams.get('lang');const saved=localStorage.getItem('ica_language');const initial=LANGS.some(x=>x[0]===requested)?requested:(LANGS.some(x=>x[0]===saved)?saved:'ko');apply(initial);
 })();
