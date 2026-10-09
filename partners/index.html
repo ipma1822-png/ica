@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>협력기관 | 국제공익자격인증재단</title>
-  <meta name="description" content="국제공익자격인증재단 협력기관 안내. 공익 자격·인증·검증을 함께 운영할 파트너를 모집합니다." />
+  <title>협력기관 | ICA · International Credential Alliance</title>
+  <meta name="description" content="ICA · International Credential Alliance 협력기관 안내. 공익 자격·인증·검증을 함께 운영할 파트너를 모집합니다." />
   <meta name="theme-color" content="#0b0f19" />
-  <link rel="icon" href="../assets/images/logo.png" />
+  <link rel="icon" href="../assets/%20images/ica-official-emblem..png" />
   <link rel="stylesheet" href="../assets/css/style.css" />
 </head>
 <body>
   <header class="topbar">
     <div class="wrap topbar__inner">
       <div class="brand">
-        <img class="brand__logo" src="../assets/images/logo.png" alt="국제공익자격인증재단 로고" />
+        <img class="brand__logo" src="../assets/%20images/ica-official-emblem..png" alt="ICA · International Credential Alliance 로고" />
         <div class="brand__text">
-          <strong class="brand__name">국제공익자격인증재단</strong>
+          <strong class="brand__name">ICA · International Credential Alliance</strong>
           <span class="brand__tag">Partners · Collaboration</span>
         </div>
       </div>
@@ -74,19 +74,10 @@
         </div>
       </section>
 
-      <!-- 파트너 리스트 -->
+      <!-- 공식 확인된 기관만 추후 공개 -->
       <section class="card" style="margin-top:12px">
-        <h2>협력기관 목록(표기 영역)</h2>
-        <p class="muted">
-          실제 협력기관을 확정하면 아래 “데이터”에 추가만 하면 자동 반영됩니다.
-          (기관 공개는 <b>동의 범위</b> 내에서만 진행하세요.)
-        </p>
-
-        <div id="plist" style="display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px; margin-top:12px"></div>
-
-        <p class="muted" style="margin-top:10px; font-size:13px">
-          ※ 카드에 로고 이미지를 넣고 싶으면 <b>assets/images/</b>에 로고 파일을 올린 뒤 데이터에 경로만 넣으면 됩니다.
-        </p>
+        <h2>협력기관 안내</h2>
+        <p class="muted">공개가 승인된 협력기관 정보는 확인 후 이곳에 안내합니다. 현재 공개된 협력기관 목록은 없습니다.</p>
       </section>
 
       <!-- 협력 요건 -->
@@ -119,54 +110,15 @@
   <footer class="footer">
     <div class="wrap footer__inner">
       <div>
-        <strong>국제공익자격인증재단</strong>
+        <strong>ICA · International Credential Alliance</strong>
         <p class="muted">Partners · Collaboration</p>
       </div>
       <div class="footer__meta">
-        <span>© <span id="year"></span> IPCF. All rights reserved.</span>
+        <span>© <span id="year"></span> ICA. All rights reserved.</span>
       </div>
     </div>
   </footer>
 
   <script src="../assets/js/app.js"></script>
-  <script>
-    // ✅ 여기만 추가하면 파트너 목록 운영 끝
-    const PARTNERS = [
-      {
-        name: "협력기관 A (예시)",
-        type: "교육/훈련",
-        note: "공동 프로그램 운영",
-        logo: "" // 예: "../assets/images/partner-a.png"
-      },
-      {
-        name: "협력기관 B (예시)",
-        type: "기준·심사",
-        note: "심사위원회 협력",
-        logo: ""
-      },
-      {
-        name: "협력기관 C (예시)",
-        type: "기관 인증",
-        note: "운영 기준 적용",
-        logo: ""
-      }
-    ];
-
-    const box = document.getElementById("plist");
-    const esc = (t) => String(t ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-
-    box.innerHTML = PARTNERS.map(p => `
-      <div class="card" style="padding:14px">
-        ${p.logo ? `<img src="${esc(p.logo)}" alt="${esc(p.name)} 로고" style="height:46px; object-fit:contain; margin-bottom:10px">` : `
-          <div style="height:46px; border-radius:14px; border:1px dashed rgba(231,236,255,.18); display:flex; align-items:center; justify-content:center; color:rgba(231,236,255,.55); font-size:12px; margin-bottom:10px">
-            LOGO (optional)
-          </div>
-        `}
-        <div style="font-weight:900; font-size:15px; line-height:1.3">${esc(p.name)}</div>
-        <div class="muted" style="margin-top:6px; font-size:13px">${esc(p.type)}</div>
-        <div class="muted" style="margin-top:6px; font-size:13px; line-height:1.55">${esc(p.note)}</div>
-      </div>
-    `).join("");
-  </script>
 </body>
 </html>
