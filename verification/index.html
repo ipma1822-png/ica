@@ -1,5 +1,8 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ICA Global Verification Center</title><meta name="description" content="ICA official credential, appointment and international branch verification"><link rel="stylesheet" href="verification.css?v=20260917-0945"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js"></script><script src="../assets/js/ica-config.js"></script><script>if (new URLSearchParams(location.search).get("lang") === "en")
         document.documentElement.lang = "en";</script><style>
+
+/* ICA shared language selector overlay (scoped; lookup forms unchanged) */
+.ica20-panel[hidden]{display:none!important}.ica20-panel{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.7);display:grid;place-items:center;padding:16px;color:#fff}.ica20-dialog{background:#101724;border:1px solid #bd974e;border-radius:18px;width:min(720px,100%);max-height:90vh;overflow:auto;padding:24px;box-shadow:0 20px 80px #0009}.ica20-head{display:flex;justify-content:space-between;gap:16px}.ica20-head small,.ica20-note{color:#e6bd64}.ica20-head strong{display:block;font-size:22px;margin:6px 0}.ica20-head p{font-size:13px;color:#cbd5e1}.ica20-close{border:1px solid #697386;background:#1b2637;color:#fff;border-radius:10px;padding:4px 12px;font-size:25px;cursor:pointer;align-self:flex-start}.ica20-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:20px 0}.ica20-lang{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid #374358;border-radius:10px;background:#182235;color:#fff;text-align:left;cursor:pointer}.ica20-lang span b{display:block}.ica20-lang small{color:#aebbd0}.ica20-note{text-align:center;font-size:11px}.ica20-lock{overflow:hidden}@media(max-width:540px){.ica20-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ica20-dialog{padding:14px}}
 /* Main-site navigation, scoped to leave verification styles intact. */
 /* Hide redundant second navigation row; preserve underlying verification tabs and menu markup. */
 .ica-entry-nav{display:none!important}
@@ -53,4 +56,4 @@
           "Enter credential number";
         document.getElementById("searchName").placeholder = "Enter name";
         document.getElementById("searchHelp").textContent =
-          "QR access automatically opens the registered record.";
+          "QR access automatically opens the registered record.";<script src="../assets/js/ica-20lang.js?v=20261009-verification-selector"></script>
