@@ -123,7 +123,7 @@ const original=[];
 const root=document.querySelector('main.page');
 const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
 let node;
-while((node=walker.nextNode())){const raw=node.nodeValue;const trimmed=raw.trim();if(!trimmed)continue;let idx=K.indexOf(trimmed);if(idx<0 && trimmed.startsWith('협력 제안은'))idx=28;if(idx>=0)original.push([node,idx,raw.slice(0,raw.indexOf(trimmed)),raw.slice(raw.indexOf(trimmed)+trimmed.length)]);}
+while((node=walker.nextNode())){const raw=node.nodeValue;const trimmed=raw.trim();if(!trimmed)continue;let idx=K.findIndex(k=>k.trim()===trimmed);if(idx<0 && trimmed.startsWith('협력 제안은'))idx=28;if(idx>=0)original.push([node,idx,raw.slice(0,raw.indexOf(trimmed)),raw.slice(raw.indexOf(trimmed)+trimmed.length)]);}
 function render(){const code=new URLSearchParams(location.search).get('lang')||localStorage.getItem('ica_language')||'ko';const lang=T[code];original.forEach(([n,i,p,q])=>{n.nodeValue=p+(lang?.[i]||K[i])+q});const title=document.querySelector('title');if(title)title.textContent=(lang?.[0]||K[0])+' | ICA · International Credential Alliance';}
 document.addEventListener('click',e=>{if(e.target.closest('.ica20-lang'))setTimeout(render,0)});
 window.addEventListener('popstate',render);
