@@ -1,6 +1,9 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ICA Global Verification Center</title><meta name="description" content="ICA official credential, appointment and international branch verification"><link rel="stylesheet" href="verification.css?v=20260917-0945"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js"></script><script src="../assets/js/ica-config.js"></script><script>if (new URLSearchParams(location.search).get("lang") === "en")
         document.documentElement.lang = "en";</script><style>
 /* Main-site navigation, scoped to leave verification styles intact. */
+/* Hide redundant second navigation row; preserve underlying verification tabs and menu markup. */
+.ica-entry-nav{display:none!important}
+
 .topbar{display:block;padding:0;background:#080c13;min-height:0;color:#fff}
 .topbar .wrap,.ica-entry-nav .wrap,.ica-entry-mega .wrap{width:min(1180px,calc(100% - 36px));margin:auto}
 .topbar__inner{height:82px;display:flex;align-items:center;justify-content:space-between;gap:12px}
