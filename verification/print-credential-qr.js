@@ -25,6 +25,28 @@
       new QRCode(qr, { text: url.href, width: 160, height: 160, correctLevel: QRCode.CorrectLevel.M });
     } catch (_) { wrap.remove(); }
   }
+
+  window.downloadCredentialQr = function(no) {
+    const card = [...result.querySelectorAll('.credential-card')].find(el => el.querySelector('.record-no')?.textContent?.trim() === String(no).trim());
+    if (!card) return;
+    sync();
+    const qr = card.querySelector('.ica-print-qr-image');
+    const canvas = qr?.querySelector('canvas');
+    const img = qr?.querySelector('img');
+    if (!canvas && !img) { alert('QR코드를 생성하지 못했습니다. 다시 시도해 주세요.'); return; }
+    const out = document.createElement('canvas');
+    out.width = out.height = 1080;
+    const ctx = out.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 1080, 1080);
+    ctx.imageSmoothingEnabled = false;
+    try {
+      ctx.drawImage(canvas || img, 40, 40, 1000, 1000);
+      const a = document.createElement('a');
+      a.download = 'ICA-QR-' + String(no).replace(/[^a-zA-Z0-9_-]/g, '_') + '.png';
+      a.href = out.toDataURL('image/png');
+      a.click();
+    } catch (_) { alert('QR 다운로드에 실패했습니다. 다시 시도해 주세요.'); }
+  };
   new MutationObserver(sync).observe(result, { childList: true, subtree: false });
   sync();
 })();
